@@ -1,9 +1,14 @@
 FROM golang:alpine
 
-WORKDIR /src/
-COPY main.go go.* /src/
-RUN CGO_ENABLED=0 go build -o /bin/demo
+WORKDIR /app
 
-FROM scratch
-COPY --from=build /bin/demo /bin/demo
-ENTRYPOINT ["/bin/demo"]
+COPY go.mod ./
+RUN go mod download
+
+COPY *.go ./
+
+RUN go build -o /hello
+
+EXPOSE 80
+
+CMD [ "/hello" ]
