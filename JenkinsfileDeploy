@@ -1,0 +1,17 @@
+node{
+    stage('Stop all containers') {
+        sh '''
+            ssh ubuntu@213.159.205.152 docker stop '$(docker ps -aq)' || true
+        '''
+    }
+    stage('Remove all images') {
+        sh '''
+            ssh ubuntu@213.159.205.152 docker rmi -f '$(docker images -aq)' || true
+        '''
+    }
+    stage('Deploy and run latest image') {
+        sh '''
+            ssh ubuntu@213.159.205.152 docker run -d -p 80:80 xarakipi/project_web2
+        '''
+    }
+}
